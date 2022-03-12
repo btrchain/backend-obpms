@@ -26,6 +26,11 @@ mongoose.connect(
 });
 
 
+app.get('/',(req,res)=>{
+ res.status.json({
+     message:'everything fine now'
+})
+
 
 
 app.use('/api/users',userRouter)
