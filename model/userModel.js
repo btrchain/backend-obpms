@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     email:{
         type:String,
         unique:true,
-        required:[true,"Please Provide email address"],
+        required:[true,"Please provide email address"],
         lowercase:true,
         validate:[valid.isEmail,"Please provide a valid email address"]
     },
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
                   validator:function(value){
                       return value === this.password
                   },
-                  message:'Password not same'
+                  message:'Password is not same'
         }
     },
     photo:String
