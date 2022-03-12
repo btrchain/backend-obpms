@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 exports.signup =  catchAsync(async (req, res, next) => {     
     // console.log(req.body)
     if (!req.body) {
-        return next(new AppError('please provide body',404,'failed')); 
+        return next(new AppError('Please provide body',404,'failed')); 
     }
 
     const userCreate = await User.create(req.body) 
@@ -34,7 +34,7 @@ exports.login = catchAsync(async (req, res, next) => {
     console.log(userPass)
     
      if(!userPass || !(await userPass.comparePassword(password,userPass))){
-        return next(new AppError('user not found or password incorrect')) 
+        return next(new AppError('User not found or password is incorrect')) 
      }
         
     const token =  jwt.sign({id:userPass._id},process.env.JWT_SECRET_KEY,{
