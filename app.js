@@ -29,7 +29,8 @@ mongoose.connect(
 app.get('/',(req,res)=>{
  res.status.json({
      message:'This api is working perfactly.'
-})
+  })
+})   
 
 
 
