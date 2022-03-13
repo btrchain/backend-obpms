@@ -32,15 +32,10 @@ exports.login = catchAsync(async (req, res, next) => {
     // console.log(email,password);
     const userPass = await User.findOne({email: email,}).select('+password') 
    
-    
-<<<<<<< HEAD
-
+    //  console.log(userPass) 
+   
      if(!userPass || !(await userPass.comparePassword(password,userPass.password))){
         return next(new AppError('user not found or password incorrect',401,'fail')) 
-=======
-     if(!userPass || !(await userPass.comparePassword(password,userPass))){
-        return next(new AppError('User not found or password is incorrect')) 
->>>>>>> f83088c291132f684061e2d7f7c464cf093b236d
      }
         
     const token =  jwt.sign({id:userPass._id},process.env.JWT_SECRET_KEY,{
@@ -93,7 +88,7 @@ exports.updatePass = catchAsync(async (req, res, next) => {
     // console.log(req.body)
     
     const userPass =await User.findById(req.user.id).select('+password')
-    console.log(userPass)
+    // console.log(userPass)
     if(!(await userPass.comparePassword(req.body.password,userPass.password))){
         return next(new AppError('wrong credentials',401,'failed'))
     }
@@ -106,6 +101,17 @@ exports.updatePass = catchAsync(async (req, res, next) => {
         status: 'success',
         data:{
             user:userPass
+        }
+        
+    })
+})
+
+exports.updateUser = catchAsync(async (req, res, next) => {
+    const user = await User.findByIdAndUpdate(req.user.id,{name:req.body.name})
+    res.status(200).json({
+        status: 'success',
+        data:{
+            user:user
         }
         
     })
