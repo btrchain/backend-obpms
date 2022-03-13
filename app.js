@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const userRouter = require('./route/userRoute')
 const globalErrorHandler = require('./controller/errorController')
+const cors = require('cors')
 require('dotenv').config()
 
 // l5tWLMsQ9B1eOuLs
@@ -10,6 +11,7 @@ const app = express()
 
 
 app.use(express.json())
+app.use(cors())
 
 mongoose.connect(
     process.env.MONGO_DB,

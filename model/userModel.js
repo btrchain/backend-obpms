@@ -28,7 +28,8 @@ const userSchema = new mongoose.Schema({
                   message:'Password not same'
         }
     },
-    photo:String
+    photo:String,
+    passwordChangeAt:Date,
 
 })
 
@@ -36,17 +37,43 @@ const userSchema = new mongoose.Schema({
 
 
 //middleware 
+// userSchema.pre('save',async function(next){
+//     console.log('pre middleware',this.isModified('password') + 'fud '+ this.isNew  )
+// })
+
 userSchema.pre('save',async function(next){
+    // console.log(this.isModified('password'),'fucking password') 
+    if(!this.isModified('password')) return next()
     this.password = await bcrypt.hash(this.password,12)
     this.passwordConfirm=undefined; 
     next();
 })
 
 
-userSchema.methods.comparePassword= async function(plainpass,haspassword){
-  return  await bcrypt.compare(plainpass,this.password)
+
+
+userSchema.pre('save',async function(next){
+    // console.log(this.isModified('password') || this.isNew ,'fucking password change')
+    if(!this.isModified('password') || this.isNew) return next()
+    this.passwordChangeAt=Date.now() - 1000
+    next()
+})
+
+
+
+
+userSchema.methods.comparePassword = async function(plainpass,haspassword){
+  return  await bcrypt.compare(plainpass,haspassword)
 }
 
+
+userSchema.methods.changePasswordAfterToken = async function(jwtTimeStamp){
+    if (this.passwordChangeAt) {
+        const changeTimeStamp = parseInt(this.passwordChangeAt.getTime()/1000,10)
+        // console.log(jwtTimeStamp,changeTimeStamp)
+        return   jwtTimeStamp < changeTimeStamp 
+    }
+}
 
 const User = mongoose.model('User',userSchema)
 
