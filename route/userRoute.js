@@ -7,6 +7,8 @@ router.route('/signup').post(auth.signup)
 router.route('/login').post(auth.login)
 router.route('/password_update').patch(auth.protect ,auth.updatePass)
 router.route('/user_update').patch(auth.protect ,auth.updateUser)
+router.route('/forget_password').post(auth.forgetPassword)
+router.route('/resetpassword/:id').post(auth.resetPassword)
 
 
 
