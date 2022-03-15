@@ -6,28 +6,85 @@ const sendEmail = require('../utils/email')
 const crypto = require('crypto')
 
 
+
+const emailVerification = async (user,token,req,res) =>{
+//   console.log(user)
+     const otp = await user.emailVerificationGen()
+     await user.save({validateBeforeSave:false})
+    //  console.log(otp);
+    try {
+        await sendEmail({
+            email:user.email,
+            subject:'your otp  (valid for 10 min)',
+            message:`your click here to verify your email ${req.protocol}://${req.get('host')}/api/users/verifyemail/${otp}`
+        })
+        res.status(200).json({
+         status: 'success',
+         message: 'Otp sent to email',
+         data:{
+            token: token
+        }
+     }) 
+    } catch (error) {
+     res.status(200).json({
+         status: 'failed',
+         message: error.message
+     })     
+    }
+
+}
+
+
 exports.signup =  catchAsync(async (req, res, next) => {     
     // console.log(req.body)
     if (!req.body) {
         return next(new AppError('Please provide body',404,'failed')); 
     }
 
-    const userCreate = await User.create(req.body) 
+    const user = await User.create(req.body) 
 
-    const token =  jwt.sign({id:userCreate._id},process.env.JWT_SECRET_KEY,{
+    const token =  jwt.sign({id:user._id},process.env.JWT_SECRET_KEY,{
         expiresIn: process.env.JWT_EXP
     })
-
-    res.status(200).json({
-        status: 'success',
-        data:{
-            userCreate,
-            token: token
-        }
-        
-    })
+   
+    emailVerification(user,token,req,res)
+    
+    // res.status(200).json({
+    //     status: 'success', 
+    // })
     
 })
+
+
+
+exports.verifyemail = catchAsync(async (req, res, next) => {
+//   console.log(req.params.id);
+  const id = await crypto.createHash('sha256').update(req.params.id).digest('hex')
+  
+  const verifyopt = await User.findOne({
+      emailVerificationCode:id,
+    emailVerificationCodeExpire:{$gt:Date.now()}})
+ 
+  if (!verifyopt) {
+      return next(new AppError('link expired or try again',500,'failed'))
+  }  
+
+//    console.log(verifyopt)
+
+  verifyopt.active = true
+  emailVerificationCode=undefined
+  emailVerificationCodeExpire=undefined
+  verifyopt.save({validateBeforeSave: false})
+  
+  res.status(200).json({
+    status: 'success',
+    message: 'email Verified successfully'
+  })
+
+})
+
+
+
 
 exports.login = catchAsync(async (req, res, next) => {
     const {email,password}  = req.body
@@ -132,7 +189,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
    const resetToken = await user.generateResetToken()
    await user.save({validateBeforeSave: false})
   
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/users/reset/${resetToken}`
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`
     const message = `forgot your password ? submit a patch request with your new password 
     and passwordConfirm to: ${resetUrl}.\nif you didn't forget your password , please ignore this email.`
 
@@ -187,3 +244,4 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     })
     
 })
+

@@ -33,6 +33,12 @@ const userSchema = new mongoose.Schema({
     passwordChangeAt:Date,
     passwordResetToken:String,
     passwordResetTokenExpire:Date,
+    active:{
+        type:String,
+        default:false,
+    },
+    emailVerificationCode:String,
+    emailVerificationCodeExpire:Date,
 
 })
 
@@ -86,6 +92,15 @@ userSchema.methods.generateResetToken = async function(){
    
    return  resetToken;
 }
+
+userSchema.methods.emailVerificationGen =  async function(){
+    const code =  await crypto.randomBytes(40).toString('hex')
+    this.emailVerificationCode = await crypto.createHash('sha256').update(code).digest('hex')
+    this.emailVerificationCodeExpire=Date.now() + 1000*60*10
+    
+    return code
+}
+
 
 const User = mongoose.model('User',userSchema)
 
