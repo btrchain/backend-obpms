@@ -119,22 +119,15 @@ exports.protect = catchAsync(async (req, res, next) => {
      token = req.headers.authorization.split(' ')[1]
     }
     // console.log(token)
-
     if(!token) return next(new AppError('You are logout ! Please login',401,'failed'))
-    
     const decode = await jwt.verify(token,process.env.JWT_SECRET_KEY)
     // console.log(decode)
-    
     const currentUser = await User.findById(decode.id).select('+password')
-
     if(!currentUser) return next(new AppError('user not found',401,'failed'))
-    
     // console.log(await currentUser.changePasswordAfterToken(decode.iat))
-
     if(await currentUser.changePasswordAfterToken(decode.iat)) {
         return next(new AppError('user recently change password .Please login agin'))
-    }  
-    
+    }    
     req.user=currentUser
    next()
 })
@@ -142,25 +135,19 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 
 exports.updatePass = catchAsync(async (req, res, next) => {
-    // console.log(req.user)
-    // console.log(req.body)
-    
     const userPass =await User.findById(req.user.id).select('+password')
     // console.log(userPass)
     if(!(await userPass.comparePassword(req.body.password,userPass.password))){
         return next(new AppError('wrong credentials',401,'failed'))
     }
-  
     userPass.password = req.body.newPassword
     userPass.passwordConfirm= req.body.newPasswrodConfirm
     userPass.save()
-
      res.status(200).json({
         status: 'success',
         data:{
             user:userPass
-        }
-        
+        }   
     })
 })
 
@@ -171,28 +158,21 @@ exports.updateUser = catchAsync(async (req, res, next) => {
         data:{
             user:user
         }
-        
     })
 })
 
 
-exports.forgetPassword = catchAsync(async (req, res, next) => {
-    
+exports.forgetPassword = catchAsync(async (req, res, next) => { 
     const user = await User.findOne({email:req.body.email})
-    
     // console.log(user)
-
     if (!user) {
        return next(new AppError('no user found',401,'failed')); 
     }
-  
    const resetToken = await user.generateResetToken()
    await user.save({validateBeforeSave: false})
-  
     const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`
     const message = `forgot your password ? submit a patch request with your new password 
     and passwordConfirm to: ${resetUrl}.\nif you didn't forget your password , please ignore this email.`
-
     try {
        await sendEmail({
            email:user.email,
