@@ -15,14 +15,14 @@ const emailVerification = async (user,token,req,res) =>{
     try {
         await sendEmail({
             email:user.email,
-            subject:'your otp  (valid for 10 min)',
-            message:`your click here to verify your email ${req.protocol}://${req.get('host')}/api/users/verifyemail/${otp}`
+            subject:'Email Verification (valid for 10 min)',
+            message:`click here to verify your email ${req.protocol}://${req.get('host')}/api/users/verifyemail/${otp}`
         })
         res.status(200).json({
-         status: 'success',
-         message: 'link sent to email',
-         data:{
-            token: token
+            data:{
+             status: 'success',
+             message: 'link sent to email',
+            user
         }
      }) 
     } catch (error) {
