@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const userRouter = require('./route/userRoute')
+const parlourRouter = require('./route/parlourRoute')
 const globalErrorHandler = require('./controller/errorController')
 const cors = require('cors')
 require('dotenv').config()
@@ -37,6 +38,7 @@ app.get('/',(req,res)=>{
 
 
 app.use('/api/users',userRouter)
+app.use('/api/parlours',parlourRouter)
 
 
 ///app error handler 
