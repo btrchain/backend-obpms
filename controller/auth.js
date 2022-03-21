@@ -22,7 +22,9 @@ const emailVerification = async (user,token,req,res) =>{
             data:{
              status: 'success',
              message: 'link sent to email',
-            user
+             active:false,
+             user:true
+
         }
      }) 
     } catch (error) {
