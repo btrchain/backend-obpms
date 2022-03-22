@@ -11,7 +11,15 @@ const emailVerification = async (user,token,req,res) =>{
 //   console.log(user)
      const otp = await user.emailVerificationGen()
      await user.save({validateBeforeSave:false})
-    //  console.log(otp);
+    //  console.log(user.email);
+    
+    //  res.cookie('jwt',token,{
+    //      expires: new Date(Date.now() + 3*24*60*60*1000),
+    //      httpOnly: true,
+    //     //  secure: true //only production 
+
+    //  })
+
     try {
         await sendEmail({
             email:user.email,
@@ -23,7 +31,9 @@ const emailVerification = async (user,token,req,res) =>{
              status: 'success',
              message: 'link sent to email',
              active:false,
-             user:true
+             user:true,
+             email:user.email,
+             name:user.name
 
         }
      }) 
@@ -80,7 +90,7 @@ exports.verifyemail = catchAsync(async (req, res, next) => {
   
   res.status(200).json({
     status: 'success',
-    message: 'email Verified successfully'
+    message: `email Verified successfully (Please login)`
   })
 
 })
