@@ -11,7 +11,7 @@ const emailVerification = async (user,token,req,res) =>{
 //   console.log(user)
      const otp = await user.emailVerificationGen()
      await user.save({validateBeforeSave:false})
-    //  console.log(user.email);
+    //  console.log(user);
     
     //  res.cookie('jwt',token,{
     //      expires: new Date(Date.now() + 3*24*60*60*1000),
@@ -30,10 +30,8 @@ const emailVerification = async (user,token,req,res) =>{
             data:{
              status: 'success',
              message: 'link sent to email',
-             active:false,
-             user:true,
-             email:user.email,
-             name:user.name
+             user,
+             token
 
         }
      }) 
@@ -111,6 +109,13 @@ exports.login = catchAsync(async (req, res, next) => {
         
     const token =  jwt.sign({id:userPass._id},process.env.JWT_SECRET_KEY,{
         expiresIn: process.env.JWT_EXP
+    })
+
+    res.cookie('jwt',token,{
+        expires: new Date(Date.now() + 3*24*60*60*1000),
+        httpOnly: true,
+       //  secure: true //only production 
+
     })
     
     res.status(200).json({
