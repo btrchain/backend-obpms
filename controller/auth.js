@@ -36,7 +36,7 @@ const emailVerification = async (user,token,req,res) =>{
         }
      }) 
     } catch (error) {
-        res.status(200).json({
+        res.status(500).json({
             status: 'failed',
             message: error.message
         })     
