@@ -29,6 +29,12 @@ const parlourSchema = new mongoose.Schema({
                   message:'Password is not same'
         }
     },
+    roadName:String,
+    localityName:String,
+    cityName:String,
+    statName:String,
+    phone: Number,
+    pinCode:Number,
     photo:String,
     passwordChangeAt:Date,
     passwordResetToken:String,

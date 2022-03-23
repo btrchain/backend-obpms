@@ -19,10 +19,12 @@ const emailVerification = async (parlour,token,req,res) =>{
             message:`click here to verify your email ${req.protocol}://${req.get('host')}/api/parlours/verifyemail/${otp}`
         })
         res.status(200).json({
-         status: 'success',
-         message: 'link sent to email',
-         data:{
-            token: token
+            data:{
+             status: 'success',
+             message: 'link sent to email',
+             parlour,
+             token
+
         }
      }) 
     } catch (error) {
@@ -104,7 +106,7 @@ exports.login = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'success',
         data:{
-            user:userPass, 
+            parlour:userPass, 
             token: token
         }
         
