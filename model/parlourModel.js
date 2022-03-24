@@ -39,7 +39,7 @@ const parlourSchema = new mongoose.Schema({
     passwordChangeAt:Date,
     passwordResetToken:String,
     passwordResetTokenExpire:Date,
-    active:{
+    active:{ 
         type:Boolean,
         default:false,
     },
