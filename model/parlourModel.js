@@ -46,15 +46,30 @@ const parlourSchema = new mongoose.Schema({
     emailVerificationCode:String,
     emailVerificationCodeExpire:Date,
 
+},{
+    toJSON:{
+        virtuals:true
+    } ,
+    toObject:{
+        virtuals:true
+    }
+ })
+
+
+
+
+parlourSchema.virtual('services',{
+    ref:"Product",
+    foreignField:"parlour",
+    localField:"_id"
 })
-
-
-
 
 //middleware 
 // userSchema.pre('save',async function(next){
 //     console.log('pre middleware',this.isModified('password') + 'fud '+ this.isNew  )
 // })
+
+
 
 parlourSchema.pre('save',async function(next){
     // console.log(this.isModified('password'),'fucking password') 
