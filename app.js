@@ -17,8 +17,8 @@ app.use(express.json())
 app.use(cors())
 
 mongoose.connect(
-    // process.env.MONGO_DB,
-    process.env.MONGO_DB_lOCALHOST,
+    process.env.MONGO_DB,
+    // process.env.MONGO_DB_lOCALHOST,
     {
         useNewUrlParser: true,
         // useUnifiedTopology: true
@@ -32,8 +32,12 @@ mongoose.connect(
 
 
 app.get('/',(req,res)=>{
- res.status(200).json({
-     message:'This api is working perfactly.'
+
+
+    console.log(`${req.protocol}://${req.get('host')}/img/`)
+    res.status(200).json({
+    message:'This api is working perfactly.',
+     
   })
 })   
 

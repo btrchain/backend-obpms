@@ -35,9 +35,12 @@ exports.uploadImage=upload.single('photo')
 
 exports.addproduct = catchAsync(async (req, res, next) => {
   // console.log(req.file,req.parlour)
+  // let photourl = `${req.protocol}://${req.get('host')}/img/${req.file.filename}`
+  // console.log(photourl)
+
   const products = await Product.create({
   title:req.body.title,
-  photo:req.file.filename,
+  photo:photourl,
   desc:req.body.desc,
   price:req.body.price,
   parlour:req.parlour.id,
