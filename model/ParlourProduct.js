@@ -12,7 +12,8 @@ const productSchema = new mongoose.Schema({
     parlour:{
         type:mongoose.Schema.ObjectId,
         ref:'Parlour'
-    }
+    },
+    duration:{type:Date}
 },{
    toJSON:{
        virtuals:true
