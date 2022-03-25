@@ -32,9 +32,7 @@ mongoose.connect(
 
 
 app.get('/',(req,res)=>{
-
-
-    console.log(`${req.protocol}://${req.get('host')}/img/`)
+    // console.log(`${req.protocol}://${req.get('host')}/img/`)
     res.status(200).json({
     message:'This api is working perfactly.',
      
