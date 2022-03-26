@@ -98,7 +98,10 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
 exports.getProductbyId = catchAsync(async (req, res, next) => {
 
   // console.log(req.params.id)
-  const allProducts = await Product.find({parlour:req.params.id})
+  const allProducts = await Product.findById(req.params.id).populate({
+    path:'parlour',
+    select:'name'
+  })
   if (!allProducts) {
     return next(new AppError('product not found please try again',404,'failed'))
   }
