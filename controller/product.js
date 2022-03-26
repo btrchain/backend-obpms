@@ -94,3 +94,19 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
 
 })
 
+
+exports.getProductbyId = catchAsync(async (req, res, next) => {
+
+  // console.log(req.params.id)
+  const allProducts = await Product.find({parlour:req.params.id})
+  if (!allProducts) {
+    return next(new AppError('product not found please try again',404,'failed'))
+  }
+  // console.log(allProducts)
+  res.status(200).json({
+    data:{
+      status: 'success',
+      allProducts
+   }
+ })
+})
