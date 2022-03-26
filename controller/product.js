@@ -76,7 +76,10 @@ exports.getProduct= catchAsync(async (req, res, next) => {
  
 exports.getAllProducts = catchAsync(async (req, res, next) => {
  
-  const allProducts = await Product.find({})
+  const allProducts = await Product.find({}).populate({
+    path:'parlour',
+    select:'name'
+  })
 
   if (!allProducts) {
     return next(new AppError('no any product available yet',404,'faild'))
