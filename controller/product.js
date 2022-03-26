@@ -44,6 +44,7 @@ exports.addproduct = catchAsync(async (req, res, next) => {
   desc:req.body.desc,
   price:req.body.price,
   parlour:req.parlour.id,
+  duration:req.body.duration,
   })
   
   // console.log(products)

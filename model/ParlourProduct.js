@@ -13,7 +13,7 @@ const productSchema = new mongoose.Schema({
         type:mongoose.Schema.ObjectId,
         ref:'Parlour'
     },
-    duration:{type:Date}
+    duration:Number,
 },{
    toJSON:{
        virtuals:true
