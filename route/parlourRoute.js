@@ -18,7 +18,7 @@ router.route('/verifyemail/:id').get(auth.verifyemail)
 ////////product
 
 
-
+router.route('/allproducts').get(product.getAllProducts)
 router.route('/productadd').post(auth.protect,product.uploadImage ,product.addproduct)
 router.route('/productget').get(auth.protect,product.getProduct)
 

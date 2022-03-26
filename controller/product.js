@@ -73,5 +73,20 @@ exports.getProduct= catchAsync(async (req, res, next) => {
 
 
  
+exports.getAllProducts = catchAsync(async (req, res, next) => {
+ 
+  const allProducts = await Product.find({})
 
+  if (!allProducts) {
+    return next(new AppError('no any product available yet',404,'faild'))
+  }
+
+  res.status(200).json({
+    data:{
+      status: 'success',
+      allProducts
+   }
+ })
+
+})
 
