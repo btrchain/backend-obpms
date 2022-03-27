@@ -5,6 +5,7 @@ const product = require('../controller/product')
 
 
 
+
 router.route('/signup').post(auth.signup)
 router.route('/login').post(auth.login)
 router.route('/password_update').patch(auth.protect ,auth.updatePass)
@@ -19,6 +20,8 @@ router.route('/verifyemail/:id').get(auth.verifyemail)
 
 
 router.route('/allproducts/:id').get(product.getProductbyId)
+
+
 router.route('/allproducts').get(product.getAllProducts)
 router.route('/productadd').post(auth.protect,product.uploadImage ,product.addproduct)
 router.route('/productget').get(auth.protect,product.getProduct)

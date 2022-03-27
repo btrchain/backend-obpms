@@ -2,7 +2,7 @@ const Product = require('../model/ParlourProduct')
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const multer = require('multer');
-const Parlour =require('../model/parlourModel')
+
 
 // const upload = multer({dest:'public/image'})
 
@@ -113,3 +113,5 @@ exports.getProductbyId = catchAsync(async (req, res, next) => {
    }
  })
 })
+
+

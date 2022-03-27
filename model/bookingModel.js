@@ -1,18 +1,21 @@
 const mongoose = require('mongoose')
 
 const bookingSchema = new mongoose.Schema({
-   
-    parlour:{
-        type:mongoose.Schema.ObjectId,
-        ref:'Parlour'
+    userName:String,
+    parlourName:String,
+    productName:String,
+    time:{
+        type:Date, 
+        default:Date.now()
     },
-    user:{
-        type:mongoose.Schema.ObjectId,
-        ref:'User'
-    }
-    
-
-
+    takenTime:{
+        type:Number,
+    },
+    date:{
+        type:Date,   
+    },
+    price:String,
+   
 })
 
 

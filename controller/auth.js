@@ -53,7 +53,7 @@ exports.signup =  catchAsync(async (req, res, next) => {
 
     const user = await User.create(req.body) 
 
-    const token =  jwt.sign({id:user._id},process.env.JWT_SECRET_KEY,{
+    const token =  jwt.sign({id:user._id},process.env.JWT_SECRET_KEY_USER,{
         expiresIn: process.env.JWT_EXP
     })
    
@@ -107,7 +107,7 @@ exports.login = catchAsync(async (req, res, next) => {
         return next(new AppError('user not found or password incorrect',401,'fail')) 
      }
         
-    const token =  jwt.sign({id:userPass._id},process.env.JWT_SECRET_KEY,{
+    const token =  jwt.sign({id:userPass._id},process.env.JWT_SECRET_KEY_USER,{
         expiresIn: process.env.JWT_EXP
     })
 
@@ -137,7 +137,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
     // console.log(token)
     if(!token) return next(new AppError('You are logout ! Please login',401,'failed'))
-    const decode = await jwt.verify(token,process.env.JWT_SECRET_KEY)
+    const decode = await jwt.verify(token,process.env.JWT_SECRET_KEY_USER)
     // console.log(decode)
     const currentUser = await User.findById(decode.id).select('+password')
     if(!currentUser) return next(new AppError('user not found',401,'failed'))
@@ -227,7 +227,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
    await user.save()
    
 
-   const token =  jwt.sign({id:user._id},process.env.JWT_SECRET_KEY,{
+   const token =  jwt.sign({id:user._id},process.env.JWT_SECRET_KEY_USER,{
     expiresIn: process.env.JWT_EXP
     })
 
