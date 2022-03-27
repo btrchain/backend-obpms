@@ -7,21 +7,16 @@ const sendEmail = require("../utils/email");
 
 
 exports.book = catchAsync(async (req, res, next) => {
-      // console.log(req.user)
-      // console.log(req.body)
+      
       let d = new Date(req.body.date).toISOString()
       let f = new Date(req.body.takenTime*60*1000).toISOString()
       
     const findbooking  =  await Book.find({
       productName:req.body.ProductName,
       serviceCompleteTime:{$lt:new Date(Date.parse(d)+Date.parse(f))} 
-      // serviceCompleteTime:{$gt:new Date(req.body.date)} 
     }) 
 
-     // console.log(req.body.date)
-    //  console.log(findbooking)   
-     // console.log(findbooking.serviceCompleteTime>new Date(Date.parse(d)+Date.parse(f)))   
-
+   
    if (findbooking.length === 0 ) {
         const booking = await Book.create({
           userName: req.user.name,

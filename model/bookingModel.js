@@ -15,7 +15,13 @@ const bookingSchema = new mongoose.Schema({
         type:Date,   
     },
     price:String,
-    serviceCompleteTime: Date
+    serviceCompleteTime: Date,
+    parlour:{
+        type:mongoose.Schema.ObjectId
+    },
+    user:{
+        type:mongoose.Schema.ObjectId
+    }
    
 })
 
