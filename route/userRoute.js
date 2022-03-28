@@ -12,7 +12,7 @@ router.route('/forget_password').post(auth.forgetPassword)
 router.route('/resetpassword/:id').post(auth.resetPassword)
 router.route('/verifyemail/:id').get(auth.verifyemail)
 router.route('/booking').post(auth.protect,booking.book)
-router.route('/history').post(auth.protect,booking.historyUser)
+router.route('/history').post(booking.historyUser)
 
 
 module.exports = router

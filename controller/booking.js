@@ -61,10 +61,10 @@ exports.book = catchAsync(async (req, res, next) => {
 });
 
 
-exports.historyUser= catchAsync(async (req, res, next) => {
+exports.historyUser = catchAsync(async (req, res, next) => {
   
-  // console.log(req.user);
-  const orders = await Book.find({user:req.user._id})
+  // console.log(req.body);
+  const orders = await Book.find({user:req.body.id})
   // console.log(orders);
   res.status(200).json({
     data: {
