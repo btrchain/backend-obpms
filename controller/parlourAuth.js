@@ -172,7 +172,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
     }
    const resetToken = await parlour.generateResetToken()
    await parlour.save({validateBeforeSave: false})
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/palours/resetpassword/${resetToken}`
+    const resetUrl = `${req.body.url}/${resetToken}`
     const message = `forgot your password ? submit a patch request with your new password 
     and passwordConfirm to: ${resetUrl}.\nif you didn't forget your password , please ignore this email.`
     try {

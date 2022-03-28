@@ -151,22 +151,22 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 
 
-exports.updatePass = catchAsync(async (req, res, next) => {
-    const userPass =await User.findById(req.user.id).select('+password')
-    // console.log(userPass)
-    if(!(await userPass.comparePassword(req.body.password,userPass.password))){
-        return next(new AppError('wrong credentials',401,'failed'))
-    }
-    userPass.password = req.body.newPassword
-    userPass.passwordConfirm= req.body.newPasswrodConfirm
-    await userPass.save()
-     res.status(200).json({
-        status: 'success',
-        data:{
-            user:userPass
-        }   
-    })
-})
+// exports.updatePass = catchAsync(async (req, res, next) => {
+//     const userPass =await User.findById(req.user.id).select('+password')
+//     // console.log(userPass)
+//     if(!(await userPass.comparePassword(req.body.password,userPass.password))){
+//         return next(new AppError('wrong credentials',401,'failed'))
+//     }
+//     userPass.password = req.body.newPassword
+//     userPass.passwordConfirm= req.body.newPasswrodConfirm
+//     await userPass.save()
+//      res.status(200).json({
+//         status: 'success',
+//         data:{
+//             user:userPass
+//         }   
+//     })
+// })
 
 exports.updateUser = catchAsync(async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user.id,{name:req.body.name})
@@ -180,14 +180,14 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
 
 exports.forgetPassword = catchAsync(async (req, res, next) => { 
+    // console.log(req.body.url)
     const user = await User.findOne({email:req.body.email})
-    // console.log(user)
     if (!user) {
        return next(new AppError('no user found',401,'failed')); 
     }
    const resetToken = await user.generateResetToken()
    await user.save({validateBeforeSave: false})
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/users/resetpassword/${resetToken}`
+    const resetUrl = `${req.body.url}/${resetToken}`
     const message = `forgot your password ? submit a patch request with your new password 
     and passwordConfirm to: ${resetUrl}.\nif you didn't forget your password , please ignore this email.`
     try {
