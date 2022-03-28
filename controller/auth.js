@@ -111,12 +111,12 @@ exports.login = catchAsync(async (req, res, next) => {
         expiresIn: process.env.JWT_EXP
     })
 
-    res.cookie('jwt',token,{
-        expires: new Date(Date.now() + 3*24*60*60*1000),
-        httpOnly: true,
-       //  secure: true //only production 
+    // res.cookie('jwt',token,{
+    //     expires: new Date(Date.now() + 3*24*60*60*1000),
+    //     httpOnly: true,
+    //    //  secure: true //only production 
 
-    })
+    // })
     
     res.status(200).json({
         status: 'success',
