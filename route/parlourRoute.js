@@ -1,4 +1,5 @@
 const express = require('express')
+const  book  = require('../controller/booking')
 const router = express.Router()
 const auth = require('../controller/parlourAuth')
 const product = require('../controller/product')
@@ -25,6 +26,7 @@ router.route('/allproducts/:id').get(product.getProductbyId)
 router.route('/allproducts').get(product.getAllProducts)
 router.route('/productadd').post(auth.protect,product.uploadImage ,product.addproduct)
 router.route('/productget').get(auth.protect,product.getProduct)
+router.route('/history').post(auth.protect,book.historyParlour)
 
 
 module.exports = router

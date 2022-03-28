@@ -7,7 +7,8 @@ const sendEmail = require("../utils/email");
 
 
 exports.book = catchAsync(async (req, res, next) => {
-      
+      // console.log(req.user)
+      // console.log(req.body)
       let d = new Date(req.body.date).toISOString()
       let f = new Date(req.body.takenTime*60*1000).toISOString()
       
@@ -20,11 +21,13 @@ exports.book = catchAsync(async (req, res, next) => {
    if (findbooking.length === 0 ) {
         const booking = await Book.create({
           userName: req.user.name,
+          user:req.user._id,
           parlourName: req.body.parlourName,
           productName: req.body.ProductName,
           date: req.body.date,
           price: req.body.price,
           takenTime: req.body.takenTime,
+          parlour:req.body.parlour,
           serviceCompleteTime: Date.now(Date.parse(req.body.date)+(req.body.tekenTime*60*1000))  
         });
 
@@ -56,3 +59,32 @@ exports.book = catchAsync(async (req, res, next) => {
    }
 
 });
+
+
+exports.historyUser= catchAsync(async (req, res, next) => {
+  
+  // console.log(req.user);
+  const orders = await Book.find({user:req.user._id})
+  // console.log(orders);
+  res.status(200).json({
+    data: {
+      status: "success",
+      orders
+    },
+  });
+
+})
+
+exports.historyParlour = catchAsync(async (req, res, next) => {
+  
+  console.log(req.parlour.id);
+  const orders = await Book.find({parlour:req.parlour._id})
+  // console.log(orders);
+  res.status(200).json({
+    data: {
+      status: "success",
+      orders
+    },
+  });
+
+})
