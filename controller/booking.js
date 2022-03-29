@@ -35,8 +35,57 @@ exports.book = catchAsync(async (req, res, next) => {
           await sendEmail({
             email: `${req.user.email},${req.body.email}`,
             subject: "Your Booking",
-            message: `<h1> Product: ${req.body.ProductName}, date: ${req.body.date}
-              price:${req.body.price}, User: ${req.user.name}</h1> `,
+            // message: `<h1> Product: ${req.body.ProductName}, date: ${req.body.date}
+            //   price:${req.body.price}, User: ${req.user.name}</h1> `,
+              message:`<table
+              role="presentation"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              class="body"
+            >
+              <tr>
+                <td>&nbsp;</td>
+                <td class="container">
+                  <div class="content">
+                    <table role="presentation" class="main">
+                      <tr>
+                        <td class="wrapper">
+                          <table
+                            role="presentation"
+                            border="0"
+                            cellpadding="0"
+                            cellspacing="0"
+                          >
+                            <tr>
+                              <td>
+                                <p>Hi ${req.user.name},</p>
+                                <p>
+                                  Your appointment with {parlour name} on ${req.body.date} at
+                                  {TIME} has been successfully booked.
+                                </p>
+                                <p>Details of your appointment below:</p>
+                                <ul>
+                                  <li>Product Name: ${req.body.ProductName}</li>
+                                  <li>Date & time: ${req.body.date}</li>
+                                  <li>Price: ${req.body.price}</li>
+                                </ul>
+                                <p>
+                                  If you need to cancel, please call {PHONE
+                                  NUMBER}.Prefer 48 hours for rescheduling or
+                                  cancellations. See you soon!<br />
+                                  Thanks, {parlour name}
+                                </p>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </table>`
           });
           res.status(200).json({
             data: {
@@ -53,7 +102,7 @@ exports.book = catchAsync(async (req, res, next) => {
    }else{
     res.status(200).json({
       data: {
-        status: "not free parlour try after sometime",
+        status: "This arlour is not accepting the order currently at this time.",
       },
     });
    }
