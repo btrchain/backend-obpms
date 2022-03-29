@@ -61,20 +61,20 @@ exports.book = catchAsync(async (req, res, next) => {
                               <td>
                                 <p>Hi ${req.user.name},</p>
                                 <p>
-                                  Your appointment with {parlour name} on ${req.body.date} at
-                                  {TIME} has been successfully booked.
+                                  Your appointment with ${req.body.parlourName} on ${req.body.date} has been successfully booked.
                                 </p>
-                                <p>Details of your appointment below:</p>
+                                <p><b>Details of your appointment below:<b></p>
                                 <ul>
-                                  <li>Product Name: ${req.body.ProductName}</li>
-                                  <li>Date & time: ${req.body.date}</li>
-                                  <li>Price: ${req.body.price}</li>
+                                  <li><b>Product Name:</b> ${req.body.ProductName}</li>
+                                  <li><b>Date & time:</b> ${req.body.date}</li>
+                                  <li><b>Price:</b> ${req.body.price}</li>
                                 </ul>
                                 <p>
-                                  If you need to cancel, please call {PHONE
-                                  NUMBER}.Prefer 48 hours for rescheduling or
+                                  If you need to cancel, please fill contact us form available on website.Prefer 48 hours for rescheduling or
                                   cancellations. See you soon!<br />
-                                  Thanks, {parlour name}
+                                  Thanks, 
+                                  <br />
+                                  ${req.body.parlourName}
                                 </p>
                               </td>
                             </tr>
