@@ -61,7 +61,7 @@ exports.book = catchAsync(async (req, res, next) => {
                               <td>
                                 <p>Hi ${req.user.name},</p>
                                 <p>
-                                  Your appointment with ${req.body.parlourName} on ${req.body.date} has been successfully booked.
+                                  Your appointment with <b> ${req.body.parlourName} </b> on ${req.body.date} has been successfully booked.
                                 </p>
                                 <p><b>Details of your appointment below:<b></p>
                                 <ul>
@@ -74,7 +74,7 @@ exports.book = catchAsync(async (req, res, next) => {
                                   cancellations. See you soon!<br />
                                   Thanks, 
                                   <br />
-                                  ${req.body.parlourName}
+                                  <b> ${req.body.parlourName} </b>
                                 </p>
                               </td>
                             </tr>
