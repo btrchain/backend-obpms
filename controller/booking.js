@@ -9,14 +9,23 @@ const sendEmail = require("../utils/email");
 exports.book = catchAsync(async (req, res, next) => {
       // console.log(req.user)
       // console.log(req.body)
-      let d = new Date(req.body.date).toISOString()
-      let f = new Date(req.body.takenTime*60*1000).toISOString()
-      
+      // console.log(req.body.date)
+      let d = Date.parse(req.body.date)
+      let f = req.body.takenTime*60*1000
+      // console.log(f);
+      // let sum = d+f
+
     const findbooking  =  await Book.find({
       productName:req.body.ProductName,
-      serviceCompleteTime:{$lt:new Date(Date.parse(d)+Date.parse(f))} 
+      serviceCompleteTime:{$gt:d}
     }) 
-
+    
+   
+    // console.log(d)
+    // // console.log(d+f)
+    // console.log(findbooking)
+    // console.log(typeof finddf.serviceCompleteTime)
+    // console.log(Date.parse(Date.parse(req.body.date)+(req.body.tekenTime*60*1000)));
    
    if (findbooking.length === 0 ) {
         const booking = await Book.create({
@@ -28,7 +37,7 @@ exports.book = catchAsync(async (req, res, next) => {
           price: req.body.price,
           takenTime: req.body.takenTime,
           parlour:req.body.parlour,
-          serviceCompleteTime: Date.now(Date.parse(req.body.date)+(req.body.tekenTime*60*1000))  
+          serviceCompleteTime: d+f
         });
 
         try {
