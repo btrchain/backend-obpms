@@ -24,9 +24,12 @@ router.route('/allproducts/:id').get(product.getProductbyId)
 
 
 router.route('/history').post(book.historyParlour)
+router.route('/today').post(book.toDayAppointment)
+
 router.route('/allproducts').get(product.getAllProducts)
 router.route('/productadd').post(auth.protect,product.uploadImage ,product.addproduct)
 router.route('/productget').get(auth.protect,product.getProduct)
+
 
 
 module.exports = router

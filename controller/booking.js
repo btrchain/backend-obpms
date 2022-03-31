@@ -7,20 +7,13 @@ const sendEmail = require("../utils/email");
 
 
 exports.book = catchAsync(async (req, res, next) => {
-      // console.log(req.user)
-      // console.log(req.body)
-      // console.log(req.body.date)
+  
       let d = Date.parse(req.body.date)
       let f = req.body.takenTime*60*1000
-      // console.log(f);
-      // let sum = d+f
-
     const findbooking  =  await Book.find({
       productName:req.body.ProductName,
       serviceCompleteTime:{$gt:d}
-    }) 
-    
-   
+    })  
     // console.log(d)
     // // console.log(d+f)
     // console.log(findbooking)
@@ -145,4 +138,27 @@ exports.historyParlour = catchAsync(async (req, res, next) => {
     },
   });
 
+})
+
+
+exports.toDayAppointment = catchAsync(async(req,res,next)=>{
+  // console.log(req.body);
+  var date = new Date();
+
+// creates ObjectId() from date:
+
+
+  // console.log(date.setDate(date.getDate()+1),date.setDate(date.getDate()-1));
+
+  const todayOrder = await Book.find({
+    parlour:req.body.id,
+    time:{ $gt:date.setDate(date.getDate()-1) }
+   })
+
+  res.status(200).json({
+    data: {
+      status: "success",
+      todayOrder
+    },
+  });
 })

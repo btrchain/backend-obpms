@@ -196,6 +196,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 })
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
+    // console.log(req.body);
     const resetToken = crypto.createHash('sha256').update(req.params.id).digest('hex')
     const parlour = await Parlour.findOne({
         passwordResetToken:resetToken,
@@ -226,6 +227,8 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     })
     
 })
+
+
 
 
 
