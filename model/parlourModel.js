@@ -57,6 +57,7 @@ const parlourSchema = new mongoose.Schema({
 
 
 
+ parlourSchema.index({'$**':'text'})
 
 parlourSchema.virtual('services',{
     ref:"Product",

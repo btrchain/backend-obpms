@@ -230,6 +230,22 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 
 
+exports.allParlour = catchAsync(async(req,res,next)=>{
+   
+//    console.log(req.body);
 
+    const allParlour = Parlour.find({$text:{$search:req.body.search}})
+     
+    const parlours = await allParlour
+
+    res.status(200).json({
+        status: 'success',
+        data:{
+           parlours
+        }
+        
+    })
+    
+})
 
 
