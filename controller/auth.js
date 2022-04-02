@@ -29,7 +29,7 @@ const emailVerification = async (user,token,req,res) =>{
         res.status(200).json({
             data:{
              status: 'success',
-             message: 'link sent to email',
+             message: 'Password reset link sent successfully',
              user,
              token
 
