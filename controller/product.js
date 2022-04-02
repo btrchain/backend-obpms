@@ -58,7 +58,7 @@ exports.getProduct = catchAsync(async (req, res, next) => {
   // console.log(products)
   if (!products) {
     return next(
-      new AppError("you are not provided services yet", 404, "faild")
+      new AppError("You are not provided services yet", 404, "faild")
     );
   }
 
@@ -77,7 +77,7 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
   });
 
   if (!allProducts) {
-    return next(new AppError("no any product available yet", 404, "faild"));
+    return next(new AppError("No any product available yet", 404, "faild"));
   }
 
   res.status(200).json({
@@ -96,7 +96,7 @@ exports.getProductbyId = catchAsync(async (req, res, next) => {
   });
   if (!allProducts) {
     return next(
-      new AppError("product not found please try again", 404, "failed")
+      new AppError("Product not found please try again", 404, "failed")
     );
   }
   // console.log(allProducts)

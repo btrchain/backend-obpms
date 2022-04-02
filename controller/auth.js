@@ -24,12 +24,16 @@ const emailVerification = async (user,token,req,res) =>{
         await sendEmail({
             email:user.email,
             subject:'Email Verification (valid for 10 min)',
-            message:`click here to verify your email ${req.protocol}://${req.get('host')}/api/users/verifyemail/${otp}`
+            // message:`click here to verify your email ${req.protocol}://${req.get('host')}/api/users/verifyemail/${otp}`
+            message:`<p>Trouble signing in?</p>
+            <p>Resetting your password is easy.</p>
+            <p>Just press the button below and follow the instructions. We&rsquo;ll have you up and running in no time.<br />${req.protocol}://${req.get('host')}/api/users/verifyemail/${otp}</p>
+            <p>If you did not make this request then please ignore this email.</p>`
         })
         res.status(200).json({
             data:{
              status: 'success',
-             message: 'Password reset link sent successfully',
+             message: 'Password changed successfully',
              user,
              token
 

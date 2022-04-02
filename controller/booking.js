@@ -104,7 +104,7 @@ exports.book = catchAsync(async (req, res, next) => {
    }else{
     res.status(200).json({
       data: {
-        status: "This arlour is not accepting the order currently at this time.",
+        status: "This parlour is not accepting the order currently at this time.",
       },
     });
    }

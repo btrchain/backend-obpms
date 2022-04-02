@@ -16,7 +16,7 @@ const emailVerification = async (parlour,token,req,res) =>{
         await sendEmail({
             email:parlour.email,
             subject:'Please verify our email  (valid for 10 min)',
-            message:`click here to verify your email ${req.protocol}://${req.get('host')}/api/parlours/verifyemail/${otp}`
+            message:`Click here to verify your email ${req.protocol}://${req.get('host')}/api/parlours/verifyemail/${otp}`
         })
         res.status(200).json({
             data:{
@@ -125,10 +125,10 @@ exports.protect = catchAsync(async (req, res, next) => {
     const decode = await jwt.verify(token,process.env.JWT_SECRET_KEY_PARLOUR)
     // console.log(decode)
     const parlourUser = await Parlour.findById(decode.id).select('+password')
-    if(!parlourUser) return next(new AppError('user not found',401,'failed'))
+    if(!parlourUser) return next(new AppError('User not found',401,'failed'))
     // console.log(await parlourUser.changePasswordAfterToken(decode.iat))
     if(await parlourUser.changePasswordAfterToken(decode.iat)) {
-        return next(new AppError('user recently change password .Please login agin'))
+        return next(new AppError('User recently change password .Please login agin'))
     }    
     req.parlour=parlourUser
    next()
@@ -140,7 +140,7 @@ exports.updatePass = catchAsync(async (req, res, next) => {
     const userPass =await Parlour.findById(req.parlour.id).select('+password')
     // console.log(userPass)
     if(!(await userPass.comparePassword(req.body.password,userPass.password))){
-        return next(new AppError('wrong credentials',401,'failed'))
+        return next(new AppError('Wrong credentials',401,'failed'))
     }
     userPass.password = req.body.newPassword
     userPass.passwordConfirm= req.body.newPasswrodConfirm
@@ -178,12 +178,12 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
     try {
        await sendEmail({
            email:parlour.email,
-           subject:'your password reset token (valid for 10 min)',
+           subject:'Your password reset token (valid for 10 min)',
            message
        })
        res.status(200).json({
         status: 'success',
-        message: 'token sent to email'
+        message: 'Token sent to email'
     }) 
    } catch (error) {
     res.status(200).json({
@@ -203,7 +203,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
         passwordResetTokenExpire:{$gt:Date.now()}})
 
    if (!parlour) {
-       return next(new AppError('token invalid or expired',500,'failed'));
+       return next(new AppError('Token invalid or expired',500,'failed'));
    }
 
    parlour.password = req.body.password
