@@ -177,12 +177,12 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
     // and passwordConfirm to: ${resetUrl}.\nif you didn't forget your password , please ignore this email.`
     const message = `<p>Trouble signing in?</p>
     <p>Resetting your password is easy.</p>
-    <p>Just press the button below and follow the instructions. We&rsquo;ll have you up and running in no time.<br />${resetUrl}</p>
+    <p>Just press the link below and follow the instructions. We&rsquo;ll have you up and running in no time.<br />${resetUrl}</p>
     <p>If you did not make this request then please ignore this email.</p>`
     try {
        await sendEmail({
            email:parlour.email,
-           subject:'Your password reset token (valid for 10 min)',
+           subject:'Your password reset link (valid for 10 min)',
            message
        })
        res.status(200).json({
