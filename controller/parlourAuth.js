@@ -173,8 +173,12 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
    const resetToken = await parlour.generateResetToken()
    await parlour.save({validateBeforeSave: false})
     const resetUrl = `${req.body.url}/${resetToken}`
-    const message = `forgot your password ? submit a patch request with your new password 
-    and passwordConfirm to: ${resetUrl}.\nif you didn't forget your password , please ignore this email.`
+    // const message = `forgot your password ? submit a patch request with your new password 
+    // and passwordConfirm to: ${resetUrl}.\nif you didn't forget your password , please ignore this email.`
+    const message = `<p>Trouble signing in?</p>
+    <p>Resetting your password is easy.</p>
+    <p>Just press the button below and follow the instructions. We&rsquo;ll have you up and running in no time.<br />${resetUrl}</p>
+    <p>If you did not make this request then please ignore this email.</p>`
     try {
        await sendEmail({
            email:parlour.email,
