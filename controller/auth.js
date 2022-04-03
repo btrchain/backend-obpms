@@ -4,7 +4,8 @@ const User = require('../model/userModel')
 const jwt = require('jsonwebtoken')
 const sendEmail = require('../utils/email')
 const crypto = require('crypto')
-
+const shortid = require('shortid')
+const Razorpay = require('razorpay')
 
 
 const emailVerification = async (user,token,req,res) =>{
@@ -245,4 +246,33 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     })
     
 })
+  
+const razorpay = new Razorpay({
+	key_id: 'rzp_test_x9p9LcFO0lqDba',
+	key_secret: 'uiSvVNxZp9n4PFPESj0DjZf4'
+})
 
+exports.razorpay= catchAsync(async(req,res,next)=>{
+  
+    // console.log(req.body,req.user);
+
+    const payment_capture = 1
+	const amount = req.body.price
+	const currency = 'INR'
+
+    const options = {
+		amount: amount * 100,
+		currency,
+		receipt: shortid.generate(),
+		payment_capture
+	}
+
+    const response = await razorpay.orders.create(options)
+    // console.log(response)
+    res.json({
+        id: response.id,
+        currency: response.currency,
+        amount: response.amount
+    })
+
+})
