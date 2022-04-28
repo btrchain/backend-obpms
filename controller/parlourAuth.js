@@ -234,20 +234,22 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 
 
-exports.allParlour = catchAsync(async(req,res,next)=>{
+exports.searchParlours = catchAsync(async(req,res,next)=>{
    
-//    console.log(req.body);
-
-    const allParlour = Parlour.find({$text:{$search:req.body.search}})
+    // console.log(req.body.search);
+    let product=[]
+    const allParlour = await Parlour.find({$text:{$search:req.body.search}}).populate('services')
+    // const allParlour = await Parlour.findById(req.body.search).populate('services')
      
-    const parlours = await allParlour
-
+    // const parlours = await allParlour
+    allParlour.forEach((service)=>{
+        product.push(service.services)
+    })
     res.status(200).json({
         status: 'success',
         data:{
-           parlours
-        }
-        
+            product
+        } 
     })
     
 })

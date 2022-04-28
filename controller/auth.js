@@ -6,7 +6,34 @@ const sendEmail = require('../utils/email')
 const crypto = require('crypto')
 const shortid = require('shortid')
 const Razorpay = require('razorpay')
+const multer = require("multer");
 
+
+const multerStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "public/img/user");
+    },
+    filename: (req, file, cb) => {
+      //user-684845df5fd-timestamp.extension
+      const ext = file.mimetype.split("/")[1];
+      cb(null, `service-${req.user.id}-${Date.now()}.${ext}`);
+    },
+  });
+  
+  const multerFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith("image")) {
+      cb(null, true);
+    } else {
+      cb(new AppError("Not an Image ! please upload only image", 400), false);
+    }
+  };
+  
+  const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter,
+  });
+  
+  exports.uploadImage = upload.single("photo");
 
 const emailVerification = async (user,token,req,res) =>{
 //   console.log(user)
@@ -156,25 +183,15 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 
 
-// exports.updatePass = catchAsync(async (req, res, next) => {
-//     const userPass =await User.findById(req.user.id).select('+password')
-//     // console.log(userPass)
-//     if(!(await userPass.comparePassword(req.body.password,userPass.password))){
-//         return next(new AppError('wrong credentials',401,'failed'))
-//     }
-//     userPass.password = req.body.newPassword
-//     userPass.passwordConfirm= req.body.newPasswrodConfirm
-//     await userPass.save()
-//      res.status(200).json({
-//         status: 'success',
-//         data:{
-//             user:userPass
-//         }   
-//     })
-// })
+
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-    const user = await User.findByIdAndUpdate(req.user.id,{name:req.body.name})
+    
+    
+    let photourl = `${req.protocol}://${req.get("host")}/img/${req.file.filename}`;
+      
+
+    const user = await User.findByIdAndUpdate(req.user.id,{photo:photourl})
     res.status(200).json({
         status: 'success',
         data:{

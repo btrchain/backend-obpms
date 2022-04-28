@@ -32,12 +32,11 @@ const upload = multer({
 exports.uploadImage = upload.single("photo");
 
 exports.addproduct = catchAsync(async (req, res, next) => {
-  // console.log(req.file,req.parlour)
+  
   let photourl = `${req.protocol}://${req.get("host")}/img/${
     req.file.filename
   }`;
-  // console.log(photourl)
-
+ 
   const products = await Product.create({
     title: req.body.title,
     photo: photourl,
@@ -107,3 +106,45 @@ exports.getProductbyId = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+
+exports.productEdit = catchAsync(async (req, res, next) => {
+
+  let photourl = `${req.protocol}://${req.get("host")}/img/${
+    req.file.filename
+  }`;
+
+   
+  const productEdited = await Product.findByIdAndUpdate(req.params.id,{
+    title: req.body.title,
+    photo: photourl,
+    desc: req.body.desc,
+    price: req.body.price,
+    parlour: req.parlour.id,
+    duration: req.body.duration,
+  })
+  
+   res.status(200).json({
+     data: {
+       status: "success",
+       productEdited
+     },
+   });
+ 
+ });
+
+
+
+
+exports.productDelete = catchAsync(async (req, res, next) => {
+  
+ const deleteProduct = await Product.findByIdAndDelete(req.params.id)
+ 
+  res.status(200).json({
+    data: {
+      status: "success",
+    },
+  });
+
+});
+

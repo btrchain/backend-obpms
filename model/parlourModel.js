@@ -56,15 +56,14 @@ const parlourSchema = new mongoose.Schema({
  })
 
 
-
  parlourSchema.index({'$**':'text'})
-
-parlourSchema.virtual('services',{
-    ref:"Product",
-    foreignField:"parlour",
-    localField:"_id"
-})
-
+ 
+ parlourSchema.virtual('services',{
+     ref:"Product",
+     foreignField:"parlour",
+     localField:"_id"
+ })
+    
 //middleware 
 // userSchema.pre('save',async function(next){
 //     console.log('pre middleware',this.isModified('password') + 'fud '+ this.isNew  )

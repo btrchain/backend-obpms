@@ -24,19 +24,18 @@ const productSchema = new mongoose.Schema({
 })
 
 
-
+// productSchema.index({'$**':'text'})
 
 // productSchema.pre(/find/,async function(next){
 //     this.populate({
-//         path:'Product'
+//         path:'parlour'
 //     })
 // })
 
 
-// productSchema.pre(/find/,async function(next){
+// productSchema.post(/find/,async function(next){
 //     this.populate({
-//         path:'parlour',
-//         select:'-photo'
+//         path:'parlour'
 //     })
 // })
 
