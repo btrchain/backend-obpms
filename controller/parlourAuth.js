@@ -4,7 +4,34 @@ const Parlour = require('../model/parlourModel')
 const jwt = require('jsonwebtoken')
 const sendEmail = require('../utils/email')
 const crypto = require('crypto')
+const multer = require("multer");
 
+
+const multerStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "public/img/parlour");
+    },
+    filename: (req, file, cb) => {
+      //user-684845df5fd-timestamp.extension
+      const ext = file.mimetype.split("/")[1];
+      cb(null, `service-${Date.now()}.${ext}`);
+    },
+  });
+  
+  const multerFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith("image")) {
+      cb(null, true);
+    } else {
+      cb(new AppError("Not an Image ! please upload only image", 400), false);
+    }
+  };
+  
+  const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter,
+  });
+  
+  exports.uploadImage = upload.single("photo");
 
 
 const emailVerification = async (parlour,token,req,res) =>{
@@ -153,15 +180,33 @@ exports.updatePass = catchAsync(async (req, res, next) => {
     })
 })
 
+
 exports.updateUser = catchAsync(async (req, res, next) => {
-    const parlour = await Parlour.findByIdAndUpdate(req.parlour.id,{name:req.body.name})
+    
+    // console.log(req.body.id);
+    // console.log(req.file.filename);
+
+    let photourl = `${req.protocol}://${req.get("host")}/img/parlour/${req.file.filename}`;     
+    const parlour = await Parlour.findByIdAndUpdate(req.body.id,{photo:photourl})
     res.status(200).json({
         status: 'success',
         data:{
-            user:parlour
+            parlour
         }
     })
 })
+
+
+
+// exports.updateUser = catchAsync(async (req, res, next) => {
+    // const parlour = await Parlour.findByIdAndUpdate(req.parlour.id,{name:req.body.name})
+//     res.status(200).json({
+//         status: 'success',
+//         data:{
+//             user:parlour
+//         }
+//     })
+// })
 
 
 exports.forgetPassword = catchAsync(async (req, res, next) => { 

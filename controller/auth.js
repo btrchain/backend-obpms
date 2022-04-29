@@ -187,16 +187,18 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.updateUser = catchAsync(async (req, res, next) => {
     
-    console.log(req.body);
+    // console.log(req.body.id);
+    // console.log(req.file.filename);
 
-    // let photourl = `${req.protocol}://${req.get("host")}/img/${req.file.filename}`;     
-    // const user = await User.findByIdAndUpdate(req.user.id,{photo:photourl})
-    // res.status(200).json({
-    //     status: 'success',
-    //     data:{
-    //         user:user
-    //     }
-    // })
+    let photourl = `${req.protocol}://${req.get("host")}/img/user/${req.file.filename}`;     
+    const user = await User.findByIdAndUpdate(req.body.id,{photo:photourl})
+   
+    res.status(200).json({
+        status: 'success',
+        data:{
+            user
+        }
+    })
 })
 
 
