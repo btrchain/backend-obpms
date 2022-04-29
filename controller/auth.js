@@ -16,7 +16,7 @@ const multerStorage = multer.diskStorage({
     filename: (req, file, cb) => {
       //user-684845df5fd-timestamp.extension
       const ext = file.mimetype.split("/")[1];
-      cb(null, `service-${req.user.id}-${Date.now()}.${ext}`);
+      cb(null, `service-${Date.now()}.${ext}`);
     },
   });
   
@@ -187,17 +187,16 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.updateUser = catchAsync(async (req, res, next) => {
     
-    
-    let photourl = `${req.protocol}://${req.get("host")}/img/${req.file.filename}`;
-      
+    console.log(req.body);
 
-    const user = await User.findByIdAndUpdate(req.user.id,{photo:photourl})
-    res.status(200).json({
-        status: 'success',
-        data:{
-            user:user
-        }
-    })
+    // let photourl = `${req.protocol}://${req.get("host")}/img/${req.file.filename}`;     
+    // const user = await User.findByIdAndUpdate(req.user.id,{photo:photourl})
+    // res.status(200).json({
+    //     status: 'success',
+    //     data:{
+    //         user:user
+    //     }
+    // })
 })
 
 

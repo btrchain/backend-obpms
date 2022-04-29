@@ -109,18 +109,11 @@ exports.getProductbyId = catchAsync(async (req, res, next) => {
 
 
 exports.productEdit = catchAsync(async (req, res, next) => {
-
-  let photourl = `${req.protocol}://${req.get("host")}/img/${
-    req.file.filename
-  }`;
-
-   
+  
   const productEdited = await Product.findByIdAndUpdate(req.params.id,{
     title: req.body.title,
-    photo: photourl,
     desc: req.body.desc,
     price: req.body.price,
-    parlour: req.parlour.id,
     duration: req.body.duration,
   })
   
@@ -137,9 +130,7 @@ exports.productEdit = catchAsync(async (req, res, next) => {
 
 
 exports.productDelete = catchAsync(async (req, res, next) => {
-  
  const deleteProduct = await Product.findByIdAndDelete(req.params.id)
- 
   res.status(200).json({
     data: {
       status: "success",
