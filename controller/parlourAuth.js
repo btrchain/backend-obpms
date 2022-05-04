@@ -282,20 +282,38 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.searchParlours = catchAsync(async(req,res,next)=>{
    
     // console.log(req.body.search);
-    let product=[]
-    const allParlour = await Parlour.find({$text:{$search:req.body.search}}).populate('services')
+    // let products=[]
+    const allParlour = await Parlour.find({$text:{$search:req.body.search}})
+    .populate('services')
+    // .populate({path:'services',
+    //            select:'name'})
     // const allParlour = await Parlour.findById(req.body.search).populate('services')
-     
-    // const parlours = await allParlour
-    allParlour.forEach((service)=>{
-        product.push(service.services)
-    })
-    res.status(200).json({
-        status: 'success',
-        data:{
-            product
+//    console.log(allParlour); 
+    // if(allParlour.length === 0) {
+
+    //     return next(new AppError('Product not Found',404,'failed'));
+    // }
+
+    allParlour.map((product)=>{
+        if(product.services.length === 0){
+            return next(new AppError('Product not Found',404,'failed'))
         } 
-    })
+        // products.push(product.services)
+        res.status(200).json({
+            status: 'success',
+            data:{
+               products: product.services
+            } 
+        })
+      }
+    )
+
+    // res.status(200).json({
+    //     status: 'success',
+    //     data:{
+    //         allParlour
+    //     } 
+    // })
     
 })
 
