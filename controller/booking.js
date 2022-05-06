@@ -14,11 +14,11 @@ exports.book = catchAsync(async (req, res, next) => {
       productName:req.body.ProductName,
       serviceCompleteTime:{$gt:d}
     })  
-    // console.log(d)
-    // // console.log(d+f)
-    // console.log(findbooking)
-    // console.log(typeof finddf.serviceCompleteTime)
-    // console.log(Date.parse(Date.parse(req.body.date)+(req.body.tekenTime*60*1000)));
+    // // console.log(d)
+    // // // console.log(d+f)
+    // // console.log(findbooking)
+    // // console.log(typeof finddf.serviceCompleteTime)
+    // // console.log(Date.parse(Date.parse(req.body.date)+(req.body.tekenTime*60*1000)));
    
    if (findbooking.length === 0 ) {
         const booking = await Book.create({
@@ -114,9 +114,9 @@ exports.book = catchAsync(async (req, res, next) => {
 
 exports.historyUser = catchAsync(async (req, res, next) => {
   
-  // console.log(req.body);
+  // // console.log(req.body);
   const orders = await Book.find({user:req.body.id})
-  // console.log(orders);
+  // // console.log(orders);
   res.status(200).json({
     data: {
       status: "success",
@@ -128,9 +128,9 @@ exports.historyUser = catchAsync(async (req, res, next) => {
 
 exports.historyParlour = catchAsync(async (req, res, next) => {
   
-  // console.log(req.parlour.id);
+  // // console.log(req.parlour.id);
   const orders = await Book.find({parlour:req.body.id})
-  // console.log(orders);
+  // // console.log(orders);
   res.status(200).json({
     data: {
       status: "success",
@@ -142,13 +142,13 @@ exports.historyParlour = catchAsync(async (req, res, next) => {
 
 
 exports.toDayAppointment = catchAsync(async(req,res,next)=>{
-  // console.log(req.body);
+  // // console.log(req.body);
   var date = new Date();
 
 // creates ObjectId() from date:
 
 
-  // console.log(date.setDate(date.getDate()+1),date.setDate(date.getDate()-1));
+  // // console.log(date.setDate(date.getDate()+1),date.setDate(date.getDate()-1));
 
   const todayOrder = await Book.find({
     parlour:req.body.id,

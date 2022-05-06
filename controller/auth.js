@@ -36,10 +36,10 @@ const multerStorage = multer.diskStorage({
   exports.uploadImage = upload.single("photo");
 
 const emailVerification = async (user,token,req,res) =>{
-//   console.log(user)
+//   // console.log(user)
      const otp = await user.emailVerificationGen()
      await user.save({validateBeforeSave:false})
-    //  console.log(user);
+    //  // console.log(user);
     
     //  res.cookie('jwt',token,{
     //      expires: new Date(Date.now() + 3*24*60*60*1000),
@@ -78,7 +78,7 @@ const emailVerification = async (user,token,req,res) =>{
 
 
 exports.signup =  catchAsync(async (req, res, next) => {     
-    // console.log(req.body)
+    // // console.log(req.body)
     if (!req.body) {
         return next(new AppError('Please provide body',404,'failed')); 
     }
@@ -100,7 +100,7 @@ exports.signup =  catchAsync(async (req, res, next) => {
 
 
 exports.verifyemail = catchAsync(async (req, res, next) => {
-//   console.log(req.params.id);
+//   // console.log(req.params.id);
   const id = await crypto.createHash('sha256').update(req.params.id).digest('hex')
   
   const verifyopt = await User.findOne({
@@ -111,7 +111,7 @@ exports.verifyemail = catchAsync(async (req, res, next) => {
       return next(new AppError('link expired or try again',500,'failed'))
   }  
 
-//    console.log(verifyopt)
+//    // console.log(verifyopt)
 
   verifyopt.active = true
   verifyopt.emailVerificationCode=undefined
@@ -130,10 +130,10 @@ exports.verifyemail = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
     const {email,password}  = req.body
-    // console.log(email,password);
+    // // console.log(email,password);
     const userPass = await User.findOne({email: email,}).select('+password') 
    
-    //  console.log(userPass) 
+    //  // console.log(userPass) 
    
      if(!userPass || !(await userPass.comparePassword(password,userPass.password))){
         return next(new AppError('user not found or password incorrect',401,'fail')) 
@@ -167,13 +167,13 @@ exports.protect = catchAsync(async (req, res, next) => {
    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
      token = req.headers.authorization.split(' ')[1]
     }
-    // console.log(token)
+    // // console.log(token)
     if(!token) return next(new AppError('You are logout ! Please login',401,'failed'))
     const decode = await jwt.verify(token,process.env.JWT_SECRET_KEY_USER)
-    // console.log(decode)
+    // // console.log(decode)
     const currentUser = await User.findById(decode.id).select('+password')
     if(!currentUser) return next(new AppError('user not found',401,'failed'))
-    // console.log(await currentUser.changePasswordAfterToken(decode.iat))
+    // // console.log(await currentUser.changePasswordAfterToken(decode.iat))
     if(await currentUser.changePasswordAfterToken(decode.iat)) {
         return next(new AppError('user recently change password .Please login agin'))
     }    
@@ -186,13 +186,10 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-    
-    // console.log(req.body.id);
-    // console.log(req.file.filename);
-
-    let photourl = `${req.protocol}://${req.get("host")}/img/user/${req.file.filename}`;     
-    const user = await User.findByIdAndUpdate(req.body.id,{photo:photourl})
-   
+    let photourl = `${req.protocol}://${req.get("host")}/img/user/${req.file.filename}`;
+    const userData = await User.findById(req.body.id);
+    userData.photo = photourl;
+    const user = await userData.save({validateBeforeSave: false})
     res.status(200).json({
         status: 'success',
         data:{
@@ -203,7 +200,6 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
 
 exports.forgetPassword = catchAsync(async (req, res, next) => { 
-    // console.log(req.body.url)
     const user = await User.findOne({email:req.body.email})
     if (!user) {
        return next(new AppError('no user found',401,'failed')); 
@@ -272,7 +268,7 @@ const razorpay = new Razorpay({
 
 exports.razorpay= catchAsync(async(req,res,next)=>{
   
-    // console.log(req.body,req.user);
+    // // console.log(req.body,req.user);
 
     const payment_capture = 1
 	const amount = req.body.price
@@ -286,7 +282,7 @@ exports.razorpay= catchAsync(async(req,res,next)=>{
 	}
 
     const response = await razorpay.orders.create(options)
-    // console.log(response)
+    // // console.log(response)
     res.json({
         id: response.id,
         currency: response.currency,

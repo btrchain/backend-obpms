@@ -43,11 +43,11 @@ const userSchema = new mongoose.Schema({
 
 //middleware
 // userSchema.pre('save',async function(next){
-//     console.log('pre middleware',this.isModified('password') + 'fud '+ this.isNew  )
+//     // console.log('pre middleware',this.isModified('password') + 'fud '+ this.isNew  )
 // })
 
 userSchema.pre("save", async function (next) {
-  // console.log(this.isModified('password'),'fucking password')
+  // // console.log(this.isModified('password'),'fucking password')
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
@@ -55,7 +55,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.pre("save", async function (next) {
-  // console.log(this.isModified('password') || this.isNew ,'fucking password change')
+  // // console.log(this.isModified('password') || this.isNew ,'fucking password change')
   if (!this.isModified("password") || this.isNew) return next();
   this.passwordChangeAt = Date.now() - 1000;
   next();
@@ -71,7 +71,7 @@ userSchema.methods.changePasswordAfterToken = async function (jwtTimeStamp) {
       this.passwordChangeAt.getTime() / 1000,
       10
     );
-    // console.log(jwtTimeStamp,changeTimeStamp)
+    // // console.log(jwtTimeStamp,changeTimeStamp)
     return jwtTimeStamp < changeTimeStamp;
   }
 };

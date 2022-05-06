@@ -35,10 +35,10 @@ const multerStorage = multer.diskStorage({
 
 
 const emailVerification = async (parlour,token,req,res) =>{
-//   console.log(user)
+//   // console.log(user)
      const otp = await parlour.emailVerificationGen()
      await parlour.save({validateBeforeSave:false})
-    //  console.log(otp);
+    //  // console.log(otp);
     try {
         await sendEmail({
             email:parlour.email,
@@ -65,7 +65,7 @@ const emailVerification = async (parlour,token,req,res) =>{
 
 
 exports.signup =  catchAsync(async (req, res, next) => {     
-    // console.log(req.body)
+    // // console.log(req.body)
     if (!req.body) {
         return next(new AppError('Please provide body',404,'failed')); 
     }
@@ -87,7 +87,7 @@ exports.signup =  catchAsync(async (req, res, next) => {
 
 
 exports.verifyemail = catchAsync(async (req, res, next) => {
-//   console.log(req.params.id);
+//   // console.log(req.params.id);
   const id = await crypto.createHash('sha256').update(req.params.id).digest('hex')
   
   const verifyopt = await Parlour.findOne({
@@ -98,7 +98,7 @@ exports.verifyemail = catchAsync(async (req, res, next) => {
       return next(new AppError('link expired or try again',500,'failed'))
   }  
 
-//    console.log(verifyopt)
+//    // console.log(verifyopt)
 
   verifyopt.active = true
   verifyopt.emailVerificationCode=undefined
@@ -117,10 +117,10 @@ exports.verifyemail = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
     const {email,password}  = req.body
-    // console.log(email,password);
+    // // console.log(email,password);
     const userPass = await Parlour.findOne({email: email,}).select('+password') 
    
-    //  console.log(userPass) 
+    //  // console.log(userPass) 
    
      if(!userPass || !(await userPass.comparePassword(password,userPass.password))){
         return next(new AppError('user not found or password incorrect',401,'fail')) 
@@ -147,13 +147,13 @@ exports.protect = catchAsync(async (req, res, next) => {
    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
      token = req.headers.authorization.split(' ')[1]
     }
-    // console.log(token)
+    // // console.log(token)
     if(!token) return next(new AppError('You are logout ! Please login',401,'failed'))
     const decode = await jwt.verify(token,process.env.JWT_SECRET_KEY_PARLOUR)
-    // console.log(decode)
+    // // console.log(decode)
     const parlourUser = await Parlour.findById(decode.id).select('+password')
     if(!parlourUser) return next(new AppError('User not found',401,'failed'))
-    // console.log(await parlourUser.changePasswordAfterToken(decode.iat))
+    // // console.log(await parlourUser.changePasswordAfterToken(decode.iat))
     if(await parlourUser.changePasswordAfterToken(decode.iat)) {
         return next(new AppError('User recently change password .Please login agin'))
     }    
@@ -165,7 +165,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.updatePass = catchAsync(async (req, res, next) => {
     const userPass =await Parlour.findById(req.parlour.id).select('+password')
-    // console.log(userPass)
+    // // console.log(userPass)
     if(!(await userPass.comparePassword(req.body.password,userPass.password))){
         return next(new AppError('Wrong credentials',401,'failed'))
     }
@@ -183,8 +183,8 @@ exports.updatePass = catchAsync(async (req, res, next) => {
 
 exports.updateUser = catchAsync(async (req, res, next) => {
     
-    // console.log(req.body.id);
-    // console.log(req.file.filename);
+    // // console.log(req.body.id);
+    // // console.log(req.file.filename);
 
     let photourl = `${req.protocol}://${req.get("host")}/img/parlour/${req.file.filename}`;     
     const parlour = await Parlour.findByIdAndUpdate(req.body.id,{photo:photourl})
@@ -211,7 +211,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
 exports.forgetPassword = catchAsync(async (req, res, next) => { 
     const parlour = await Parlour.findOne({email:req.body.email})
-    // console.log(parlour)
+    // // console.log(parlour)
     if (!parlour) {
        return next(new AppError('no parlour found',401,'failed')); 
     }
@@ -245,7 +245,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 })
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-    // console.log(req.body);
+    // // console.log(req.body);
     const resetToken = crypto.createHash('sha256').update(req.params.id).digest('hex')
     const parlour = await Parlour.findOne({
         passwordResetToken:resetToken,
@@ -281,14 +281,14 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 exports.searchParlours = catchAsync(async(req,res,next)=>{
    
-    // console.log(req.body.search);
+    // // console.log(req.body.search);
     // let products=[]
     const allParlour = await Parlour.find({$text:{$search:req.body.search}})
     .populate('services')
     // .populate({path:'services',
     //            select:'name'})
     // const allParlour = await Parlour.findById(req.body.search).populate('services')
-//    console.log(allParlour); 
+//    // console.log(allParlour); 
     // if(allParlour.length === 0) {
 
     //     return next(new AppError('Product not Found',404,'failed'));

@@ -46,7 +46,7 @@ exports.addproduct = catchAsync(async (req, res, next) => {
     duration: req.body.duration,
   });
 
-  // console.log(products)
+  // // console.log(products)
   res.status(200).json(products);
 });
 
@@ -54,7 +54,7 @@ exports.getProduct = catchAsync(async (req, res, next) => {
   const products = await Product.find({ parlour: req.parlour.id }).select(
     "-parlour"
   );
-  // console.log(products)
+  // // console.log(products)
   if (!products) {
     return next(
       new AppError("You are not provided services yet", 404, "faild")
@@ -88,7 +88,7 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
 });
 
 exports.getProductbyId = catchAsync(async (req, res, next) => {
-  // console.log(req.params.id)
+  // // console.log(req.params.id)
   const allProducts = await Product.findById(req.params.id).populate({
     path: "parlour",
     select: "name localityName cityName pinCode email",
@@ -98,7 +98,7 @@ exports.getProductbyId = catchAsync(async (req, res, next) => {
       new AppError("Product not found please try again", 404, "failed")
     );
   }
-  // console.log(allProducts)
+  // // console.log(allProducts)
   res.status(200).json({
     data: {
       status: "success",

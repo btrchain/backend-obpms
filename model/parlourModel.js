@@ -66,13 +66,13 @@ const parlourSchema = new mongoose.Schema({
     
 //middleware 
 // userSchema.pre('save',async function(next){
-//     console.log('pre middleware',this.isModified('password') + 'fud '+ this.isNew  )
+//     // console.log('pre middleware',this.isModified('password') + 'fud '+ this.isNew  )
 // })
 
 
 
 parlourSchema.pre('save',async function(next){
-    // console.log(this.isModified('password'),'fucking password') 
+    // // console.log(this.isModified('password'),'fucking password') 
     if(!this.isModified('password')) return next()
     this.password = await bcrypt.hash(this.password,12)
     this.passwordConfirm=undefined; 
@@ -83,7 +83,7 @@ parlourSchema.pre('save',async function(next){
 
 
 parlourSchema.pre('save',async function(next){
-    // console.log(this.isModified('password') || this.isNew ,'fucking password change')
+    // // console.log(this.isModified('password') || this.isNew ,'fucking password change')
     if(!this.isModified('password') || this.isNew) return next()
     this.passwordChangeAt=Date.now() - 1000
     next()
@@ -100,7 +100,7 @@ parlourSchema.methods.comparePassword = async function(plainpass,haspassword){
 parlourSchema.methods.changePasswordAfterToken = async function(jwtTimeStamp){
     if (this.passwordChangeAt) {
         const changeTimeStamp = parseInt(this.passwordChangeAt.getTime()/1000,10)
-        // console.log(jwtTimeStamp,changeTimeStamp)
+        // // console.log(jwtTimeStamp,changeTimeStamp)
         return   jwtTimeStamp < changeTimeStamp 
     }
 }
