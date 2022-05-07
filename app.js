@@ -14,18 +14,18 @@ const app = express()
 app.use(express.static(`${__dirname}/public`))
 
 app.use(express.json())
-var whitelist = ['https://obpms.btrchain.com', 'https://parlour.btrchain.com']
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
-app.use(cors(corsOptions))
-// app.options('*', cors())
+// var whitelist = ['https://obpms.btrchain.com', 'https://parlour.btrchain.com']
+// var corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
+// app.use(cors(corsOptions))
+app.use( cors())
 
 mongoose.connect(
     // process.env.MONGO_DB,
