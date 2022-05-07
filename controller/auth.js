@@ -53,10 +53,7 @@ const emailVerification = async (user,token,req,res) =>{
             email:user.email,
             subject:'Email Verification (valid for 10 min)',
             // message:`click here to verify your email ${req.protocol}://${req.get('host')}/api/users/verifyemail/${otp}`
-            message:`<p>Trouble signing in?</p>
-            <p>Resetting your password is easy.</p>
-            <p>Just press the link below and follow the instructions. We&rsquo;ll have you up and running in no time.<br />${req.protocol}://${req.get('host')}/api/users/verifyemail/${otp}</p>
-            <p>If you did not make this request then please ignore this email.</p>`
+            message:`<body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8" leftmargin="0" > <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8" style=" @import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif; " > <tr> <td> <table style="background-color: #f2f3f8; max-width: 670px; margin: 0 auto" width="100%" border="0" align="center" cellpadding="0" cellspacing="0" > <tr> <td style="height: 80px">&nbsp;</td> </tr> <tr> <td style="height: 20px">&nbsp;</td> </tr> <tr> <td> <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style=" max-width: 670px; background: #fff; border-radius: 3px; text-align: center; -webkit-box-shadow: 0 6px 18px 0 rgba(0, 0, 0, 0.06); -moz-box-shadow: 0 6px 18px 0 rgba(0, 0, 0, 0.06); box-shadow: 0 6px 18px 0 rgba(0, 0, 0, 0.06); " > <tr> <td style="height: 40px">&nbsp;</td> </tr> <tr> <td style="padding: 0 35px"> <h1 style=" color: #1e1e2d; font-weight: 500; margin: 0; font-size: 32px; font-family: 'Rubik', sans-serif; " > You have requested to reset your password </h1> <span style=" display: inline-block; vertical-align: middle; margin: 29px 0 26px; border-bottom: 1px solid #cecece; width: 100px; " ></span> <p style=" color: #455056; font-size: 15px; line-height: 24px; margin: 0; " > We cannot simply send you your old password. A unique link to reset your password has been generated for you. To reset your password, click the following link and follow the instructions. </p> <a href=${req.protocol}://${req.get('host')}/api/users/verifyemail/${otp} style=" background: #e52e71; text-decoration: none !important; font-weight: 500; margin-top: 35px; color: #fff; text-transform: uppercase; font-size: 14px; padding: 10px 24px; display: inline-block; border-radius: 50px; " >Reset Password</a > </td> </tr> <tr> <td style="height: 40px">&nbsp;</td> </tr> </table> </td> </tr> <tr> <td style="height: 20px">&nbsp;</td> </tr> <tr> <td style="text-align: center"> <p style=" font-size: 14px; color: rgba(69, 80, 86, 0.7411764705882353); line-height: 18px; margin: 0 0 0; " > &copy; <strong>OBPMS</strong> </p> </td> </tr> <tr> <td style="height: 80px">&nbsp;</td> </tr> </table> </td> </tr> </table></body>`
         })
         res.status(200).json({
             data:{
@@ -76,9 +73,8 @@ const emailVerification = async (user,token,req,res) =>{
 
 }
 
-
 exports.signup =  catchAsync(async (req, res, next) => {     
-    // // console.log(req.body)
+    // console.log(req.body)
     if (!req.body) {
         return next(new AppError('Please provide body',404,'failed')); 
     }
@@ -100,7 +96,7 @@ exports.signup =  catchAsync(async (req, res, next) => {
 
 
 exports.verifyemail = catchAsync(async (req, res, next) => {
-//   // console.log(req.params.id);
+ // console.log(req.params.id);
   const id = await crypto.createHash('sha256').update(req.params.id).digest('hex')
   
   const verifyopt = await User.findOne({
@@ -111,7 +107,7 @@ exports.verifyemail = catchAsync(async (req, res, next) => {
       return next(new AppError('link expired or try again',500,'failed'))
   }  
 
-//    // console.log(verifyopt)
+ // console.log(verifyopt)
 
   verifyopt.active = true
   verifyopt.emailVerificationCode=undefined
@@ -120,7 +116,7 @@ exports.verifyemail = catchAsync(async (req, res, next) => {
   
   res.status(200).json({
     status: 'success',
-    message: `email Verified successfully (Please login)`
+    message: `Email Verified successfully (Please login)`
   })
 
 })
@@ -130,13 +126,13 @@ exports.verifyemail = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
     const {email,password}  = req.body
-    // // console.log(email,password);
+     // console.log(email,password);
     const userPass = await User.findOne({email: email,}).select('+password') 
    
-    //  // console.log(userPass) 
+     // console.log(userPass) 
    
      if(!userPass || !(await userPass.comparePassword(password,userPass.password))){
-        return next(new AppError('user not found or password incorrect',401,'fail')) 
+        return next(new AppError('User not found or password is incorrect',401,'fail')) 
      }
         
     const token =  jwt.sign({id:userPass._id},process.env.JWT_SECRET_KEY_USER,{
@@ -168,7 +164,7 @@ exports.protect = catchAsync(async (req, res, next) => {
      token = req.headers.authorization.split(' ')[1]
     }
     // // console.log(token)
-    if(!token) return next(new AppError('You are logout ! Please login',401,'failed'))
+    if(!token) return next(new AppError('You are logged out ! Please login again.',401,'failed'))
     const decode = await jwt.verify(token,process.env.JWT_SECRET_KEY_USER)
     // // console.log(decode)
     const currentUser = await User.findById(decode.id).select('+password')
@@ -180,10 +176,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.user=currentUser
    next()
 })
-
-
-
-
 
 exports.updateUser = catchAsync(async (req, res, next) => {
     let photourl = `${req.protocol}://${req.get("host")}/img/user/${req.file.filename}`;
@@ -207,17 +199,18 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
    const resetToken = await user.generateResetToken()
    await user.save({validateBeforeSave: false})
     const resetUrl = `${req.body.url}/${resetToken}`
-    const message = `forgot your password ? submit a patch request with your new password 
-    and passwordConfirm to: ${resetUrl}.\nif you didn't forget your password , please ignore this email.`
+    // const message = `forgot your password ? submit a patch request with your new password 
+    // and passwordConfirm to: ${resetUrl}.\nif you didn't forget your password , please ignore this email.`
+    const message = `<body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8" leftmargin="0" > <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8" style=" @import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif; " > <tr> <td> <table style="background-color: #f2f3f8; max-width: 670px; margin: 0 auto" width="100%" border="0" align="center" cellpadding="0" cellspacing="0" > <tr> <td style="height: 80px">&nbsp;</td> </tr> <tr> <td style="height: 20px">&nbsp;</td> </tr> <tr> <td> <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style=" max-width: 670px; background: #fff; border-radius: 3px; text-align: center; -webkit-box-shadow: 0 6px 18px 0 rgba(0, 0, 0, 0.06); -moz-box-shadow: 0 6px 18px 0 rgba(0, 0, 0, 0.06); box-shadow: 0 6px 18px 0 rgba(0, 0, 0, 0.06); " > <tr> <td style="height: 40px">&nbsp;</td> </tr> <tr> <td style="padding: 0 35px"> <h1 style=" color: #1e1e2d; font-weight: 500; margin: 0; font-size: 32px; font-family: 'Rubik', sans-serif; " > You have requested to reset your password </h1> <span style=" display: inline-block; vertical-align: middle; margin: 29px 0 26px; border-bottom: 1px solid #cecece; width: 100px; " ></span> <p style=" color: #455056; font-size: 15px; line-height: 24px; margin: 0; " > We cannot simply send you your old password. A unique link to reset your password has been generated for you. To reset your password, click the following link and follow the instructions. </p> <a href=${resetUrl} style=" background: #e52e71; text-decoration: none !important; font-weight: 500; margin-top: 35px; color: #fff; text-transform: uppercase; font-size: 14px; padding: 10px 24px; display: inline-block; border-radius: 50px; " >Reset Password</a > </td> </tr> <tr> <td style="height: 40px">&nbsp;</td> </tr> </table> </td> </tr> <tr> <td style="height: 20px">&nbsp;</td> </tr> <tr> <td style="text-align: center"> <p style=" font-size: 14px; color: rgba(69, 80, 86, 0.7411764705882353); line-height: 18px; margin: 0 0 0; " > &copy; <strong>OBPMS</strong> </p> </td> </tr> <tr> <td style="height: 80px">&nbsp;</td> </tr> </table> </td> </tr> </table></body>`
     try {
        await sendEmail({
            email:user.email,
-           subject:'your password reset token (valid for 10 min)',
+           subject:'Password reset link for OBPMS client(valid for 10 min)',
            message
        })
        res.status(200).json({
         status: 'success',
-        message: 'token sent to email'
+        message: 'Password reset link sent to email'
     }) 
    } catch (error) {
     res.status(200).json({
@@ -236,7 +229,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
         passwordResetTokenExpire:{$gt:Date.now()}})
 
    if (!user) {
-       return next(new AppError('token invalid or expired',500,'failed'));
+       return next(new AppError('Link is invalid or expired',500,'failed'));
    }
 
    user.password = req.body.password
