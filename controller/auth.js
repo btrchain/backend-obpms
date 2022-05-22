@@ -248,7 +248,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     })
 
     res.status(200).json({
-        status: 'success',
+        status: 'Password Reset Successfully.',
         data:{
             user:user, 
             token: token

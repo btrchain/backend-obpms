@@ -246,7 +246,6 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  // // console.log(req.body);
   const resetToken = crypto
     .createHash("sha256")
     .update(req.params.id)
@@ -275,7 +274,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   );
 
   res.status(200).json({
-    status: "success",
+    status: "Password Reset Successfully.",
     data: {
       user: parlour,
       token: token,
