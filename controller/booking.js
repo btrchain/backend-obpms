@@ -37,8 +37,6 @@ exports.book = catchAsync(async (req, res, next) => {
           await sendEmail({
             email: `${req.user.email},${req.body.email}`,
             subject: "Your Booking",
-            // message: `<h1> Product: ${req.body.ProductName}, date: ${req.body.date}
-            //   price:${req.body.price}, User: ${req.user.name}</h1> `,
               message:`<table
               role="presentation"
               border="0"
@@ -104,7 +102,7 @@ exports.book = catchAsync(async (req, res, next) => {
    }else{
     res.status(200).json({
       data: {
-        status: "This parlour is not accepting the order currently at this time.",
+        status: "This parlour is not accepting the order at this time.",
       },
     });
    }
@@ -113,10 +111,8 @@ exports.book = catchAsync(async (req, res, next) => {
 
 
 exports.historyUser = catchAsync(async (req, res, next) => {
-  
-  // // console.log(req.body);
   const orders = await Book.find({user:req.body.id})
-  // // console.log(orders);
+  
   res.status(200).json({
     data: {
       status: "success",
@@ -127,10 +123,8 @@ exports.historyUser = catchAsync(async (req, res, next) => {
 })
 
 exports.historyParlour = catchAsync(async (req, res, next) => {
-  
-  // // console.log(req.parlour.id);
   const orders = await Book.find({parlour:req.body.id})
-  // // console.log(orders);
+
   res.status(200).json({
     data: {
       status: "success",
@@ -142,13 +136,8 @@ exports.historyParlour = catchAsync(async (req, res, next) => {
 
 
 exports.toDayAppointment = catchAsync(async(req,res,next)=>{
-  // // console.log(req.body);
+
   var date = new Date();
-
-// creates ObjectId() from date:
-
-
-  // // console.log(date.setDate(date.getDate()+1),date.setDate(date.getDate()-1));
 
   const todayOrder = await Book.find({
     parlour:req.body.id,
